@@ -3,12 +3,14 @@ import chai from 'chai';
 import { Model } from 'mongoose';
 
 import CarModel from '../../../models/CarsModel';
+import CarService from '../../../services/cars.Service';
 import { correctCar } from '../carsMock';
 
 const { expect } = chai;
 
-describe('Testa a criação de items na model', () => {
-  const createdCar = { _id: 2, ...correctCar };
+describe('Testa a criação de items na service', () => {
+  const createdCar = { ...correctCar };
+
   before(async () => {
     sinon
       .stub(Model, 'create')
@@ -19,11 +21,10 @@ describe('Testa a criação de items na model', () => {
     sinon.restore();
   })
 
-  const carModel = new CarModel();
+  const carService = new CarService(new CarModel());
 
   it('Deve retornar o item criado', async () => {
-    const result = await carModel.create(correctCar);
+    const result = await carService.create(correctCar);
     expect(result).to.deep.equal(createdCar);
   });
-
 });
