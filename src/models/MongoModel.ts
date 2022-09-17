@@ -13,7 +13,7 @@ export default abstract class MongoModel<T> implements IModel<T> {
   }
 
   async read(): Promise<T[]> {
-    return this._model.find({}, { _id: 0 });
+    return this._model.find();
   }
 
   async readOne(_id: string): Promise<T | null> {
