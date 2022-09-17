@@ -55,4 +55,26 @@ describe('Testa Services', () => {
     });
   });
 
+  describe('Testa a procura de carro por id na services', () => {
+    const createdCar = { _id: "bacbf78ac5bebf8ba7efbce9", ...correctCar };
+
+    before(async () => {
+      sinon
+        .stub(Model, 'findOne')
+        .resolves(createdCar);
+    });
+
+    after(() => {
+      sinon.restore();
+    })
+
+    const carService = new CarService(new CarModel());
+
+    it('Deve retornar o carro pelo id', async () => {
+      const result = await carService.readOne("bacbf78ac5bebf8ba7efbce9");
+      expect(result).to.deep.equal(createdCar);
+    });
+
+  });
+
 })

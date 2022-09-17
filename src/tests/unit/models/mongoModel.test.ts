@@ -53,6 +53,27 @@ describe('Testa Model', () => {
       const result = await carModel.read();
       expect(result).to.deep.equal(carsList);
     });
+  });
+
+  describe('Testa a procura de carro por id na model', () => {
+    const createdCar = { _id: "bacbf78ac5bebf8ba7efbce9", ...correctCar };
+
+    before(async () => {
+      sinon
+        .stub(Model, 'findOne')
+        .resolves(createdCar);
+    });
+
+    after(() => {
+      sinon.restore();
+    })
+
+    const carModel = new CarModel();
+
+    it('Deve retornar o carro pelo id', async () => {
+      const result = await carModel.readOne("bacbf78ac5bebf8ba7efbce9");
+      expect(result).to.deep.equal(createdCar);
+    });
 
   });
 });
