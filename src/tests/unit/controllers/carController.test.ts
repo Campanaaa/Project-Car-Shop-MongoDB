@@ -4,7 +4,7 @@ import chai from 'chai';
 import CarModel from '../../../models/CarsModel';
 import CarService from '../../../services/cars.Service';
 import CarController from '../../../controllers/carsController';
-import { correctCar } from '../carsMock';
+import { correctCar, updatedCar } from '../carsMock';
 import { Request, Response } from 'express';
 
 const { expect } = chai;
@@ -33,7 +33,7 @@ describe('Testa Controllers', () => {
       sinon.restore();
     });
 
-    it('Deve retornar o item criado', async () => {
+    it('Deve retornar o status 200', async () => {
       req.body = correctCar;
       await carController.create(req, res);
       expect((res.status as sinon.SinonStub).calledWith(201)).to.be.true;
@@ -60,7 +60,7 @@ describe('Testa Controllers', () => {
       sinon.restore();
     });
 
-    it('Deve retornar todos os itens criados', async () => {
+    it('Deve retornar o status 200', async () => {
       await carController.read(req, res);
       expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
     });
@@ -81,9 +81,32 @@ describe('Testa Controllers', () => {
       sinon.restore();
     })
 
-    it('Deve retornar o carro pelo id e status 200', async () => {
+    it('Deve retornar o status 200', async () => {
       req.params = { id: "bacbf78ac5bebf8ba7efbce9" };
       await carController.readOne(req, res);
+      expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
+    });
+  });
+
+  describe('Testa o update de carro por id no controller', () => {
+    const createdCar = { _id: "bacbf78ac5bebf8ba7efbce9", ...correctCar };
+
+    before(() => {
+      sinon
+        .stub(carService, 'update')
+        .resolves(createdCar);
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub();
+    });
+
+    after(() => {
+      sinon.restore();
+    })
+
+    it('Deve retornar o status 200', async () => {
+      req.params = { id: "bacbf78ac5bebf8ba7efbce9" };
+      req.body = updatedCar;
+      await carController.update(req, res);
       expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
     });
   });
