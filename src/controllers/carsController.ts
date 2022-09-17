@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { ICar } from '../interfaces/ICar';
 import { IModel } from '../interfaces/IModel';
 import CustomError from '../helpers/CustomError';
+import ErrorMessages from '../helpers/ErrorMessages';
 
 export default class CarController {
   private _carService: IModel<ICar>;
@@ -24,23 +25,31 @@ export default class CarController {
   public async readOne(req: Request, res: Response<ICar>): Promise<Response> {
     const { id } = req.params;
     if (id.length !== 24) {
-      throw new CustomError(400, 'Id must have 24 hexadecimal characters');
+      throw new CustomError(400, ErrorMessages.IdError);
     }
     const result = await this._carService.readOne(id);
     if (!result) {
-      throw new CustomError(404, 'Object not found');
+      throw new CustomError(404, ErrorMessages.NotFoundError);
     }
     return res.status(200).json(result);
   }
 
   public async update(req: Request & { body: ICar }, res: Response): Promise<Response> {
     const { id } = req.params;
-    if (id.length !== 24) throw new CustomError(400, 'Id must have 24 hexadecimal characters');
-    if (!Object.keys(req.body).length) throw new CustomError(400, 'Body is empty');
+    if (id.length !== 24) throw new CustomError(400, ErrorMessages.IdError);
+    if (!Object.keys(req.body).length) throw new CustomError(400, ErrorMessages.BodyError);
 
     const result = await this._carService.update(id, req.body);
 
-    if (!result) throw new CustomError(404, 'Object not found');
+    if (!result) throw new CustomError(404, ErrorMessages.NotFoundError);
     return res.status(200).json(result);
+  }
+
+  public async delete(req: Request, res: Response): Promise<void> {
+    const { id } = req.params;
+    if (id.length !== 24) throw new CustomError(400, ErrorMessages.IdError);
+    const result = await this._carService.delete(id);
+    if (!result) throw new CustomError(404, ErrorMessages.NotFoundError);
+    return res.status(204).end();
   }
 }
