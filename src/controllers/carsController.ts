@@ -32,4 +32,15 @@ export default class CarController {
     }
     return res.status(200).json(result);
   }
+
+  public async update(req: Request & { body: ICar }, res: Response): Promise<Response> {
+    const { id } = req.params;
+    if (id.length !== 24) throw new CustomError(400, 'Id must have 24 hexadecimal characters');
+    if (!Object.keys(req.body).length) throw new CustomError(400, 'Body is empty');
+
+    const result = await this._carService.update(id, req.body);
+
+    if (!result) throw new CustomError(404, 'Object not found');
+    return res.status(200).json(result);
+  }
 }
