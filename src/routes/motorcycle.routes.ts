@@ -15,5 +15,9 @@ motorcycleRouter.get(
   '/:id',
   (req: Request, res: Response) => motorcycleController.readOne(req, res),
 );
+motorcycleRouter.put(
+  '/:id',
+  (req: Request, res: Response) => motorcycleController.update(req, res),
+);
 
 export default motorcycleRouter;
