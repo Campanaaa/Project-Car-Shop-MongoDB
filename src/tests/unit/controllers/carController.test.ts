@@ -110,4 +110,26 @@ describe('Testa Controllers', () => {
       expect((res.status as sinon.SinonStub).calledWith(200)).to.be.true;
     });
   });
+
+  describe('Testa o delete de carro por id no controller', () => {
+    const deletedCar = { _id: "bacbf78ac5bebf8ba7efbce9", ...correctCar };
+
+    before(async () => {
+      sinon
+        .stub(carService, 'delete')
+        .resolves(deletedCar);
+      res.status = sinon.stub().returns(res);
+      res.json = sinon.stub();
+    });
+
+    after(() => {
+      sinon.restore();
+    })
+
+    it('Deve retornar o status 204', async () => {
+      req.params = { id: "bacbf78ac5bebf8ba7efbce9" };
+      await carController.delete(req, res);
+      expect((res.status as sinon.SinonStub).calledWith(204)).to.be.true;
+    });
+  });
 });

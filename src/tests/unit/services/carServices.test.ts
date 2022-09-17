@@ -96,7 +96,27 @@ describe('Testa Services', () => {
       const result = await carService.update("bacbf78ac5bebf8ba7efbce9", updatedCar);
       expect(result).to.deep.equal(car);
     });
+  });
 
+  describe('Testa o delete de carro por id na service', () => {
+    const deletedCar = { _id: "bacbf78ac5bebf8ba7efbce9", ...correctCar };
+
+    before(async () => {
+      sinon
+        .stub(Model, 'findByIdAndDelete')
+        .resolves(deletedCar);
+    });
+
+    after(() => {
+      sinon.restore();
+    })
+
+    const carService = new CarService(new CarModel());
+
+    it('Deve retornar o carro deletado pela id', async () => {
+      const result = await carService.delete("bacbf78ac5bebf8ba7efbce9");
+      expect(result).to.deep.equal(deletedCar);
+    });
   });
 
 })

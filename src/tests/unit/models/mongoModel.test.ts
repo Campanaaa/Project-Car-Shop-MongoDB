@@ -98,4 +98,25 @@ describe('Testa Model', () => {
     });
 
   });
+
+  describe('Testa o delete de carro por id na model', () => {
+    const deletedCar = { _id: "bacbf78ac5bebf8ba7efbce9", ...correctCar };
+
+    before(async () => {
+      sinon
+        .stub(Model, 'findByIdAndDelete')
+        .resolves(deletedCar);
+    });
+
+    after(() => {
+      sinon.restore();
+    })
+
+    const carModel = new CarModel();
+
+    it('Deve retornar o carro deletado pela id', async () => {
+      const result = await carModel.delete("bacbf78ac5bebf8ba7efbce9");
+      expect(result).to.deep.equal(deletedCar);
+    });
+  });
 });

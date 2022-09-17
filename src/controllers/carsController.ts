@@ -45,11 +45,11 @@ export default class CarController {
     return res.status(200).json(result);
   }
 
-  public async delete(req: Request, res: Response): Promise<void> {
+  public async delete(req: Request, res: Response<null>) {
     const { id } = req.params;
     if (id.length !== 24) throw new CustomError(400, ErrorMessages.IdError);
     const result = await this._carService.delete(id);
     if (!result) throw new CustomError(404, ErrorMessages.NotFoundError);
-    return res.status(204).end();
+    return res.status(204).json();
   }
 }
